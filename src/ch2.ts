@@ -371,6 +371,10 @@ const chatInMemoryResource = new GenericsInMemoryResource<IChat>('chat')
 userInMemoryResource.addResource({id: 1, name: 'Admin', email: 'admin@admin.com'});
 chatInMemoryResource.addResource({id: 10, ownerId: userInMemoryResource.get(1)!.id, messages: []});
 
+// PROMISES:
+// I do want to study these a little more.
+// js is assumed knowledge for this text, so really I should already understand this
+// I should also try to improve my intuition on maps and the `() =>` syntax.
 function fetchData(): Promise<string> {
     return new Promise((resolve) => {
         setTimeout(() => resolve("Data Fetched"), 1000);
