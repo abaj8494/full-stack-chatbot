@@ -23,3 +23,15 @@ export async function checkJWTAuth(
     return jwtMiddleware(c, next);
   }
 }
+
+export async function attachUserId(
+  c: Context,
+  next: () => Promise<void>,
+): Promise<Response | void> {
+  const payload = c.get("jwtPayload") as APIUser;
+  if (payload) {
+    const id = payload.id;
+    c.set("userId", id);
+  }
+  await next();
+}
