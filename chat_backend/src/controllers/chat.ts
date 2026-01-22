@@ -1,11 +1,6 @@
 import { Hono } from "hono";
 import type { ContextVariables } from "../constants";
-import type {
-  DBChat,
-  DBCreateChat,
-  DBCreateMessage,
-  DBMessage,
-} from "../models/db";
+import type { DBChat, DBCreateChat, DBCreateMessage, DBMessage } from "../models/db";
 
 import type { IDatabaseResource } from "../storage/types";
 
@@ -15,7 +10,7 @@ const CHAT_MESSAGE_ROUTE = ":id/message/";
 
 export function createChatApp(
   chatResource: IDatabaseResource<DBChat, DBCreateChat>,
-  messageResource: IDatabaseResource<DBMessage, DBCreateMessage>,
+  messageResource: IDatabaseResource<DBMessage, DBCreateMessage>
 ) {
   const chatApp = new Hono<ContextVariables>();
   chatApp.post(CHAT_ROUTE, async (c) => {

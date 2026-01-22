@@ -18,10 +18,7 @@ import { SimpleInMemoryResource } from "../storage/in_memory";
 import { AUTH_PREFIX, createAuthApp } from "./auth";
 import { CHAT_PREFIX, createChatApp } from "./chat";
 
-export function createMainApp(
-  authApp: Hono<ContextVariables>,
-  chatApp: Hono<ContextVariables>,
-) {
+export function createMainApp(authApp: Hono<ContextVariables>, chatApp: Hono<ContextVariables>) {
   const app = new Hono<ContextVariables>().basePath(API_PREFIX);
   app.use("*", timing());
   app.use("*", logger());
@@ -38,7 +35,7 @@ export function createInMemoryApp() {
     createAuthApp(new SimpleInMemoryResource<DBUser, DBCreateUser>()),
     createChatApp(
       new SimpleInMemoryResource<DBChat, DBCreateChat>(),
-      new SimpleInMemoryResource<DBMessage, DBCreateMessage>(),
-    ),
+      new SimpleInMemoryResource<DBMessage, DBCreateMessage>()
+    )
   );
 }

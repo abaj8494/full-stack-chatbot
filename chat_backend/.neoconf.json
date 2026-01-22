@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/neoconf",
+  "lspconfig": {
+    "biome": {
+      "autostart": false
+    },
+    "eslint": {
+      "autostart": true
+    },
+    "tailwindcss": {
+      "autostart": false
+    }
+  },
+  "neoconf": {
+    "plugins": {
+      "lua_ls": {
+        "enabled": false
+      }
+    }
+  }
+}
