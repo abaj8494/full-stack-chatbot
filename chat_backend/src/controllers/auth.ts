@@ -1,9 +1,22 @@
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { env } from "hono/adapter";
 import { sign } from "hono/jwt";
+import { z } from "zod";
 import type { ContextVariables } from "../constants";
-import type { DBCreateUser, DBUser } from "../models/db";
+import type { DBCreateUser, DBUser, Email } from "../models/db";
 import type { IDatabaseResource } from "../storage/types";
+
+const registerSchema = z.object({
+  email: z.email().transform((x) => x as Email),
+  password: z.string().min(1),
+  name: z.string().min(1),
+});
+
+const loginSchema = z.object({
+  email: z.email().transform((x) => x as Email),
+  password: z.string().min(1),
+});
 
 export const AUTH_PREFIX = "/auth/";
 
@@ -16,7 +29,7 @@ export const ERROR_USER_ALREADY_EXIST = "USER_ALREADY_EXISTS";
 export const ERROR_INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
 
 export function createAuthApp(userResource: IDatabaseResource<DBUser, DBCreateUser>) {
-  authApp.post(REGISTER_ROUTE, async (c) => {
+  authApp.post(REGISTER_ROUTE, zValidator("json", registerSchema), async (c) => {
     const { email, password, name } = await c.req.json();
     if (await userResource.find({ email })) {
       return c.json({ error: ERROR_USER_ALREADY_EXIST }, 400);
@@ -32,7 +45,7 @@ export function createAuthApp(userResource: IDatabaseResource<DBUser, DBCreateUs
     return c.json({ success: true });
   });
 
-  authApp.post(LOGIN_ROUTE, async (c) => {
+  authApp.post(LOGIN_ROUTE, zValidator("json", loginSchema), async (c) => {
     const { email, password } = await c.req.json();
     const fulluser = await userResource.find({ email });
     if (!fulluser || !(await Bun.password.verify(password, fulluser.password))) {
